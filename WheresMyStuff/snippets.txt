@@ -1,0 +1,30 @@
+    await context.Customers
+        .Include(e => e.Contact).ThenInclude(e => e.PrimaryAddress).ThenInclude(e => e.PrimaryPhone).ThenInclude(e => e.Country)
+        .Include(e => e.Contact).ThenInclude(e => e.PrimaryAddress).ThenInclude(e => e.Country)
+        .Include(e => e.Contact).ThenInclude(e => e.PrimaryPhone).ThenInclude(e => e.Country)
+        .Include(e => e.Contact).ThenInclude(e => e.Addresses).ThenInclude(e => e.PrimaryPhone).ThenInclude(e => e.Country)
+        .Include(e => e.Contact).ThenInclude(e => e.Addresses).ThenInclude(e => e.Country)
+        .Include(e => e.Contact).ThenInclude(e => e.PhoneNumbers).ThenInclude(e => e.Country)
+        .ToListAsync();
+
+
+
+
+        modelBuilder.Entity<Customer>().OwnsOne(e => e.Contact,
+            e =>
+            {
+                e.OwnsOne(e => e.PrimaryAddress, e =>
+                {
+                    e.OwnsOne(e => e.PrimaryPhone).OwnsOne(e => e.Country);
+                    e.OwnsOne(e => e.Country);
+                });
+                e.OwnsMany(e => e.Addresses, e =>
+                {
+                    e.OwnsOne(e => e.PrimaryPhone).OwnsOne(e => e.Country);
+                    e.OwnsOne(e => e.Country);
+                });
+                e.OwnsOne(e => e.PrimaryPhone).OwnsOne(e => e.Country);;
+                e.OwnsMany(e => e.PhoneNumbers).OwnsOne(e => e.Country);;
+            });
+
+
